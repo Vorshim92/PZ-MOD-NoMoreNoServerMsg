@@ -8,7 +8,7 @@ function ServerMessageUI:initialise()
 end
 
 function ServerMessageUI:prerender()
-    if self.servermsg and ISChat.instance.isClosed then
+    if self.servermsg then
         local x = getCore():getScreenWidth() / 2 - self:getX()
         local y = getCore():getScreenHeight() / 4 - self:getY();
         self:drawTextCentre(self.servermsg, x, y, 1, 0.1, 0.1, 1, UIFont.Title)
@@ -16,6 +16,7 @@ function ServerMessageUI:prerender()
         if self.servermsgTimer < 0 then
             self.servermsg = nil
             self.servermsgTimer = 0
+            self:setVisible(false) -- we disable it when the message is over
         end
     end
 end
@@ -23,6 +24,7 @@ end
 function ServerMessageUI:setServerMessage(message)
     self.servermsg = message
     self.servermsgTimer = 5000 -- Display for 5 seconds
+    self:setVisible(true)
 end
 
 local originalISChat_addLineInChat = ISChat.addLineInChat
@@ -37,6 +39,9 @@ function ISChat.addLineInChat(message, tabID)
         chat.serverMessageUI:setServerMessage(msg)
     end
     originalISChat_addLineInChat(message)
+    -- Here, we disable the server message UI vanilla
+    chat.servermsg = nil;
+    chat.servermsgTimer = 0;
 end
 
 local original_ISChat_initialise = ISChat.initialise
@@ -44,31 +49,6 @@ function ISChat:initialise()
     self.serverMessageUI = ServerMessageUI:new(0, 0, 0, 0)
     self.serverMessageUI:initialise()
     self.serverMessageUI:addToUIManager()
-    self.serverMessageUI:setVisible(false)
+    self.serverMessageUI:setVisible(false) -- we avoid useless rendering with setVisible(false)
     original_ISChat_initialise(self)
-end
-
-
-
-local original_ISChat_close = ISChat.close
-function ISChat:close()
-    original_ISChat_close(self)
-    self.isClosed = true
-    self.serverMessageUI:setVisible(true)
-end
-
--- local original_ISChat_prerender = ISChat.prerender
--- function ISChat:prerender()
---     if self.isClosed then
---         self.serverMessageUI:setVisible(true)
---     end
---     original_ISChat_prerender(self)
--- end
-
-local original_ISChat_focus = ISChat.focus
-function ISChat:focus()
-    if self.isClosed then
-        self.isClosed = false
-    end
-    original_ISChat_focus(self)
 end
