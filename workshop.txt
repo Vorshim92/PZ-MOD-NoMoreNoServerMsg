@@ -1,6 +1,6 @@
 version=1
 id=
-title=Template
+title=YesServerMsg
 description=description
 tags=Build 41;
 visibility=public
