@@ -1,0 +1,4 @@
+name=Server Alert Fix
+id=ServerAlertFix
+description=This mod fixes a critical bug where players would miss server alert messages when the in-game chat was closed. With this fix, essential notifications like restart warnings or emergency announcements or anythings from "servermsg" command, will always appear on-screen, ensuring no player misses vital information. A must-have for smooth multiplayer server management in Project Zomboid!
+poster=poster.png
