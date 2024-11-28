@@ -38,7 +38,7 @@ function ISChat.addLineInChat(message, tabID)
         msg = msg .. message:getText()
         chat.serverMessageUI:setServerMessage(msg)
     end
-    originalISChat_addLineInChat(message)
+    originalISChat_addLineInChat(message, tabID)
     -- Here, we disable the server message UI vanilla
     chat.servermsg = nil;
     chat.servermsgTimer = 0;
