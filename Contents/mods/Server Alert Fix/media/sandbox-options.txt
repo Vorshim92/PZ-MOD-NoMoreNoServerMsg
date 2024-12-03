@@ -1,0 +1,10 @@
+VERSION = 1,
+
+option ServerAlertFix.Timer
+{
+  type = integer,
+  default = 5000, min = 0, max = 10000000,
+
+  page = ServerAlertFix,
+  translation = ServerAlertFix.Timer,
+}

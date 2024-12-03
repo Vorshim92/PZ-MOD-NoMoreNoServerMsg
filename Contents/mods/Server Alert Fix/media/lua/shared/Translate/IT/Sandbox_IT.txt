@@ -1,6 +1,4 @@
 Sandbox_IT = {
-    Sandbox_Test.Boolean = "Test Boolean",
-	Sandbox_Test.Integer = "Test Integer",
-	Sandbox_Test.String = "Test String",
-    Sandbox_Test = "Test",
+    Sandbox_ServerAlertFix = "Server Alert Fix",
+    Sandbox_ServerAlertFix.Timer = "Imposta il timer in millisecondi. 0 per disabilitare.",
 }

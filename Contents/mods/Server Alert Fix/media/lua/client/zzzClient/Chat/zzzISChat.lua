@@ -23,7 +23,7 @@ end
 
 function ServerMessageUI:setServerMessage(message)
     self.servermsg = message
-    self.servermsgTimer = 5000 -- Display for 5 seconds
+    self.servermsgTimer = SandboxVars.ServerAlertFix.Timer or 5000 -- Display for 5 seconds
     self:setVisible(true)
 end
 
