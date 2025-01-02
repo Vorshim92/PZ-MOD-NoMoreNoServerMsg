@@ -1,5 +1,20 @@
 ServerMessageUI = ISUIElement:derive("ServerMessageUI")
 
+function ServerMessageUI:new (x, y, width, height)
+    local o = {}
+    o = ISUIElement:new(x, y, width, height);
+    setmetatable(o, self)
+    self.__index = self
+    o.x = x;
+    o.y = y;
+    o.width = width;
+    o.height = height;
+    o.servermsg = "";
+    o.servermsgTimer = 0;
+    ServerMessageUI.instance = o;
+    return o
+end
+
 function ServerMessageUI:initialise()
     ISUIElement.initialise(self)
     self.servermsg = nil
@@ -22,33 +37,53 @@ function ServerMessageUI:prerender()
 end
 
 function ServerMessageUI:setServerMessage(message)
+    self:setVisible(true)
     self.servermsg = message
     self.servermsgTimer = SandboxVars.ServerAlertFix.Timer or 5000 -- Display for 5 seconds
-    self:setVisible(true)
+    if self.servermsgTimer == 0 then
+        self.servermsg = nil
+        self:setVisible(false)
+    end
 end
+
+function ServerMessageUI.getInstance()
+    if not ServerMessageUI.instance then
+        local ui = ServerMessageUI:new(0, 0, 0, 0)
+        ui:initialise()
+        ui:addToUIManager()
+    end
+    return ServerMessageUI.instance
+end
+
 
 local originalISChat_addLineInChat = ISChat.addLineInChat
 function ISChat.addLineInChat(message, tabID)
-    local chat = ISChat.instance
-    if message:isServerAlert() then
-        local msg = ""
-        if message:isShowAuthor() then
-            msg = message:getAuthor() .. ": "
-        end
-        msg = msg .. message:getText()
-        chat.serverMessageUI:setServerMessage(msg)
-    end
+    -- Chiamiamo la versione originale
     originalISChat_addLineInChat(message, tabID)
-    -- Here, we disable the server message UI vanilla
-    chat.servermsg = nil;
-    chat.servermsgTimer = 0;
-end
 
-local original_ISChat_initialise = ISChat.initialise
-function ISChat:initialise()
-    self.serverMessageUI = ServerMessageUI:new(0, 0, 0, 0)
-    self.serverMessageUI:initialise()
-    self.serverMessageUI:addToUIManager()
-    self.serverMessageUI:setVisible(false) -- we avoid useless rendering with setVisible(false)
-    original_ISChat_initialise(self)
+    -- Se il messaggio è un alert del server
+    if message:isServerAlert() then
+        -- Here, we disable the server message UI vanilla
+        local chat = ISChat.instance
+        if chat then
+            chat.servermsg = nil
+            chat.servermsgTimer = 0
+        end
+
+        -- Ricaviamo autore e testo
+        local author = message:isShowAuthor() and message:getAuthor() or ""
+        local text   = message:getText()
+
+        -- Componiamo il messaggio
+        local fullMsg
+        if author ~= "" then
+            fullMsg = author .. ": " .. text
+        else
+            fullMsg = text
+        end
+
+        -- Mostriamo il messaggio attraverso la nostra UI personalizzata
+        local myUI = ServerMessageUI.getInstance()
+        myUI:setServerMessage(fullMsg)  -- durata 5 secondi (ms)
+    end
 end
