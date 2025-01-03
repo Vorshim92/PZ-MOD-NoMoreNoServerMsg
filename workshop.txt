@@ -1,6 +1,8 @@
 version=1
 id=3373262658
-title=Server Alert Fix
-description=This mod fixes a critical bug where players would miss server alert messages when the in-game chat was closed. With this fix, essential notifications like restart warnings or emergency announcements or anythings from "servermsg" command, will always appear on-screen, ensuring no player misses vital information. A must-have for smooth multiplayer server management in Project Zomboid!
+title=Server Alert Fix [ONLY B41 - Fixed in B42]
+description=This mod fixes a critical bug where players would miss server alert messages when the in-game chat was closed. With this fix, essential notifications like restart warnings, emergency announcements, or anything from the "servermsg" command will always appear on-screen, ensuring no player misses vital information. A must-have for smooth multiplayer server management in Project Zomboid!
+description=
+description=Please note: This mod is not necessary for Build 42, as the developers have implemented a new event (Events.OnAlertMessage.Add(ISAlert.getAlert)) to handle server alerts independently of the chat. However, it's an excellent solution for those who wish to maintain a server on Build 41, as it replicates nearly the same functionality introduced in Build 42.
 tags=Build 41;Framework;Interface;Multiplayer
 visibility=public
